@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muneeb Shahid | Sentient Architect</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ["'Instrument Serif'", "serif"],
+                        body: ["'Barlow'", "sans-serif"],
+                        inter: ["'Inter'", "sans-serif"]
+                    },
+                    colors: {
+                        background: "#050510",
+                        foreground: "#ffffff",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles (Liquid Glass, Animations, Matrix Rain, Pyramid) -->
+    <style>
+        body { 
+            background: #050510; 
+            color: #fff; 
+            margin: 0; 
+            overflow-x: hidden; 
+            font-family: 'Barlow', sans-serif; 
+        }
+        
+        /* --- Liquid Glass Utility --- */
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.01);
+            background-blend-mode: luminosity;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: none;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.4px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .liquid-glass-strong {
+            background: rgba(255, 255, 255, 0.05);
+            background-blend-mode: luminosity;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: none;
+            box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass-strong::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.4px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.2) 80%, rgba(255,255,255,0.6) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* --- Pyramid Loader --- */
+        .pyramid-loader { position: relative; width: 300px; height: 300px; display: block; transform-style: preserve-3d; transform: rotateX(-20deg); }
+        .wrapper { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotateY(360deg); } }
+        .pyramid-loader .wrapper .side { width: 70px; height: 70px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; transform-origin: center top; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        .pyramid-loader .wrapper .side1 { transform: rotateZ(-30deg) rotateY(90deg); background: conic-gradient( #2BDEAC, #F028FD, #D8CCE6, #2F2585); }
+        .pyramid-loader .wrapper .side2 { transform: rotateZ(30deg) rotateY(90deg); background: conic-gradient( #2F2585, #D8CCE6, #F028FD, #2BDEAC); }
+        .pyramid-loader .wrapper .side3 { transform: rotateX(30deg); background: conic-gradient( #2F2585, #D8CCE6, #F028FD, #2BDEAC); }
+        .pyramid-loader .wrapper .side4 { transform: rotateX(-30deg); background: conic-gradient( #2BDEAC, #F028FD, #D8CCE6, #2F2585); }
+        .pyramid-loader .wrapper .shadow { width: 60px; height: 60px; background: #8B5AD5; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; transform: rotateX(90deg) translateZ(-40px); filter: blur(12px); }
+
+        /* --- Matrix Rain Overlay --- */
+        .matrix-container { position: absolute; inset: 0; overflow: hidden; opacity: 0.08; z-index: 0; pointer-events: none; mix-blend-mode: screen; }
+        .matrix-pattern { position: relative; width: 100vw; height: 100%; display: flex; justify-content: space-around; }
+        .matrix-column { position: relative; top: -100%; width: 20px; font-size: 16px; line-height: 18px; font-weight: bold; animation: fall linear infinite; white-space: nowrap; color: #00ff41; text-shadow: 0 0 5px #00ff41; }
+        .matrix-column::before { content: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン123456789"; position: absolute; top: 0; left: 0; writing-mode: vertical-lr; letter-spacing: 2px; }
+        @keyframes fall { 0% { transform: translateY(-10%); opacity: 1; } 100% { transform: translateY(200%); opacity: 0; } }
+
+        /* --- Floating Anti-Gravity Effects --- */
+        @keyframes floating { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        .animate-floating { animation: floating 5s ease-in-out infinite; }
+        .delay-1 { animation-delay: 1.5s; }
+        .delay-2 { animation-delay: 2.5s; }
+        .delay-3 { animation-delay: 3.5s; }
+
+        /* Vanta Canvas Background */
+        #vanta-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+        
+        html { scroll-behavior: smooth; }
+
+        /* --- Section Cinematic Divider --- */
+        .section-divider {
+            position: relative;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0,255,65,0.25) 30%, rgba(147,51,234,0.35) 50%, rgba(0,255,65,0.25) 70%, transparent 100%);
+            overflow: visible;
+        }
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 80px;
+            background: radial-gradient(ellipse at center, rgba(147,51,234,0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* --- Scroll-reveal base states handled by framer-motion --- */
+    </style>
+
+    <!-- React, ReactDOM, Babel & Framer Motion via CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script>window.Motion = window.FramerMotion || window.Motion;</script>
+    
+    <!-- Three.js and Vanta.js for the Hero Biological-Digital Network -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    
+    <!-- Baffle.js for Text Decryption -->
+    <script src="https://cdn.jsdelivr.net/npm/baffle@0.3.6/dist/baffle.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+        const { motion, useSpring, useScroll, useTransform, AnimatePresence } = window.FramerMotion || window.Motion || {};
+
+        // ==========================================
+        // Stacked Panels Interactive Component
+        // ==========================================
+        const PANEL_COUNT = 22;
+        const WAVE_SPRING = { stiffness: 160, damping: 22, mass: 0.6 };
+        const SCENE_SPRING = { stiffness: 80, damping: 22, mass: 1 };
+        const Z_SPREAD = 42;
+        const SIGMA = 2.8;
+
+        const PANEL_IMAGES = [
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
+            "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=400&q=80",
+            "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&q=80",
+            "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80",
+            "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&q=80",
+            "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400&q=80",
+            "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&q=80",
+            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80"
+        ];
+
+        const GRADIENT_OVERLAYS = [
+            "linear-gradient(135deg, rgba(99,55,255,0.55) 0%, rgba(236,72,153,0.45) 100%)",
+            "linear-gradient(135deg, rgba(6,182,212,0.55) 0%, rgba(59,130,246,0.45) 100%)",
+            "linear-gradient(135deg, rgba(245,158,11,0.55) 0%, rgba(239,68,68,0.45) 100%)",
+            "linear-gradient(135deg, rgba(16,185,129,0.45) 0%, rgba(6,182,212,0.55) 100%)",
+        ];
+
+        function Panel({ index, total, waveY, scaleY }) {
+            const t = index / (total - 1);
+            const baseZ = (index - (total - 1)) * Z_SPREAD;
+            const w = 200 + t * 80;
+            const h = 280 + t * 120;
+            const opacity = 0.25 + t * 0.75;
+            const imageUrl = PANEL_IMAGES[index % PANEL_IMAGES.length];
+            const gradient = GRADIENT_OVERLAYS[index % GRADIENT_OVERLAYS.length];
+
+            return (
+                <motion.div
+                    className="absolute rounded-xl pointer-events-none overflow-hidden"
+                    style={{
+                        width: w,
+                        height: h,
+                        marginLeft: -w / 2,
+                        marginTop: -h / 2,
+                        transform: `translateZ(${baseZ}px)`,
+                        y: waveY,
+                        scaleY,
+                        transformOrigin: "bottom center",
+                        opacity,
+                    }}
+                >
+                    <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${imageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+                    <div style={{ position: "absolute", inset: 0, background: gradient, mixBlendMode: "multiply" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 100%)" }} />
+                    <div style={{ position: "absolute", inset: 0, borderRadius: "inherit", border: `1px solid rgba(255,255,255,${0.08 + t * 0.22})`, boxSizing: "border-box" }} />
+                </motion.div>
+            );
+        }
+
+        function StackedPanels() {
+            const containerRef = useRef(null);
+            const isHovering = useRef(false);
+
+            const waveYSprings = Array.from({ length: PANEL_COUNT }, () => useSpring(0, WAVE_SPRING));
+            const scaleYSprings = Array.from({ length: PANEL_COUNT }, () => useSpring(1, WAVE_SPRING));
+            const rotY = useSpring(15, SCENE_SPRING);
+            const rotX = useSpring(5, SCENE_SPRING);
+
+            const handleMouseMove = useCallback((e) => {
+                const rect = containerRef.current?.getBoundingClientRect();
+                if (!rect) return;
+                isHovering.current = true;
+
+                const cx = (e.clientX - rect.left) / rect.width;
+                const cy = (e.clientY - rect.top) / rect.height;
+
+                rotY.set(15 + (cx - 0.5) * 24);
+                rotX.set(5 + (cy - 0.5) * -15);
+
+                const cursorCardPos = cx * (PANEL_COUNT - 1);
+
+                waveYSprings.forEach((spring, i) => {
+                    const dist = Math.abs(i - cursorCardPos);
+                    const influence = Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
+                    spring.set(-influence * 70);
+                });
+
+                scaleYSprings.forEach((spring, i) => {
+                    const dist = Math.abs(i - cursorCardPos);
+                    const influence = Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
+                    spring.set(0.35 + influence * 0.65);
+                });
+            }, [rotY, rotX, waveYSprings, scaleYSprings]);
+
+            const handleMouseLeave = useCallback(() => {
+                isHovering.current = false;
+                rotY.set(15);
+                rotX.set(5);
+                waveYSprings.forEach(s => s.set(0));
+                scaleYSprings.forEach(s => s.set(1));
+            }, [rotY, rotX, waveYSprings, scaleYSprings]);
+
+            return (
+                <div
+                    ref={containerRef}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    className="relative w-full h-[700px] flex items-center justify-center select-none"
+                    style={{ perspective: "1000px" }}
+                >
+                    <motion.div style={{ rotateY: rotY, rotateX: rotX, transformStyle: "preserve-3d", position: "relative", width: 0, height: 0 }}>
+                        {Array.from({ length: PANEL_COUNT }).map((_, i) => (
+                            <Panel key={i} index={i} total={PANEL_COUNT} waveY={waveYSprings[i]} scaleY={scaleYSprings[i]} />
+                        ))}
+                    </motion.div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // Text Decryption Component (Baffle.js)
+        // ==========================================
+        const DecryptText = ({ text }) => {
+            const elRef = useRef(null);
+            
+            useEffect(() => {
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting && elRef.current) {
+                        const b = baffle(elRef.current, {
+                            characters: '█▓▒░<>//}{[]~^10',
+                            speed: 80
+                        });
+                        b.start();
+                        b.reveal(2500);
+                        observer.disconnect();
+                    }
+                }, { threshold: 0.1 });
+                
+                if (elRef.current) observer.observe(elRef.current);
+                return () => observer.disconnect();
+            }, []);
+
+            return <span ref={elRef}>{text}</span>;
+        }
+
+        // ==========================================
+        // Interactive 3D Contact Card
+        // ==========================================
+        function ContactCard() {
+            const cardRef = useRef(null);
+            const rotX = useSpring(0, { stiffness: 100, damping: 20 });
+            const rotY = useSpring(0, { stiffness: 100, damping: 20 });
+
+            const handleMouseMove = (e) => {
+                if (!cardRef.current) return;
+                const rect = cardRef.current.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                rotX.set(-(y / rect.height) * 40);
+                rotY.set((x / rect.width) * 40);
+            };
+
+            const handleMouseLeave = () => {
+                rotX.set(0);
+                rotY.set(0);
+            };
+
+            return (
+                <div 
+                    ref={cardRef}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    style={{ perspective: 1200 }}
+                    className="w-full max-w-lg mx-auto h-[350px] mt-12 cursor-crosshair z-20 relative"
+                >
+                    <motion.div 
+                        style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
+                        className="w-full h-full liquid-glass-strong rounded-[2.5rem] p-10 flex flex-col justify-center items-center text-center relative border border-white/10"
+                    >
+                        {/* 3D floating inner elements via translateZ */}
+                        <div style={{ transform: "translateZ(80px)" }} className="z-10">
+                            <h3 className="text-4xl font-heading italic text-white mb-2 tracking-tight pointer-events-none">Initialize Link</h3>
+                            <a href="mailto:muhammad.muneeb.nif@gmail.com" className="block text-white/60 hover:text-white transition-colors mb-8 font-inter text-sm uppercase tracking-widest pointer-events-auto">muhammad.muneeb.nif@gmail.com</a>
+                        </div>
+                        <div style={{ transform: "translateZ(100px)" }} className="flex gap-6 z-20">
+                            <a href="#" className="liquid-glass text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-black transition-colors shadow-xl shadow-black/50 pointer-events-auto">GitHub</a>
+                            <a href="#" className="bg-[#00ff41]/90 text-black px-8 py-3 rounded-full font-bold hover:bg-[#00ff41] hover:scale-105 transition-transform shadow-xl shadow-[#00ff41]/20 pointer-events-auto">LinkedIn</a>
+                        </div>
+                        {/* Abstract 3D elements inside card */}
+                        <div style={{ transform: "translateZ(-40px)" }} className="absolute -top-10 -right-10 w-32 h-32 bg-[#8b5ad5]/30 rounded-full blur-2xl pointer-events-none"></div>
+                        <div style={{ transform: "translateZ(20px)" }} className="absolute -bottom-10 -left-10 w-32 h-32 bg-[#00ff41]/20 rounded-full blur-2xl pointer-events-none"></div>
+                        <div style={{ transform: "translateZ(40px)" }} className="absolute inset-0 border border-white/5 rounded-[2.5rem] pointer-events-none"></div>
+                    </motion.div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // Universal Section Reveal Wrapper
+        // ==========================================
+        function SectionReveal({ children, direction = 'up', delay = 0, className = '' }) {
+            const variants = {
+                up:    { hidden: { opacity: 0, y: 70 },  visible: { opacity: 1, y: 0 } },
+                down:  { hidden: { opacity: 0, y: -70 }, visible: { opacity: 1, y: 0 } },
+                left:  { hidden: { opacity: 0, x: -80 }, visible: { opacity: 1, x: 0 } },
+                right: { hidden: { opacity: 0, x: 80 },  visible: { opacity: 1, x: 0 } },
+                scale: { hidden: { opacity: 0, scale: 0.88 }, visible: { opacity: 1, scale: 1 } },
+                fade:  { hidden: { opacity: 0 },          visible: { opacity: 1 } },
+            };
+            const chosen = variants[direction] || variants.up;
+            return (
+                <motion.div
+                    className={className}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.12 }}
+                    transition={{ duration: 0.85, delay, ease: [0.22, 1, 0.36, 1] }}
+                    variants={chosen}
+                >
+                    {children}
+                </motion.div>
+            );
+        }
+
+        // ==========================================
+        // Polyglot Hub Interactive Section
+        // ==========================================
+        function PolyglotHubSection() {
+            const containerRef = useRef(null);
+            const x = useSpring(0, { stiffness: 100, damping: 30 });
+            const y = useSpring(0, { stiffness: 100, damping: 30 });
+
+            const handleMouseMove = (e) => {
+                if (!containerRef.current) return;
+                const rect = containerRef.current.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                x.set((e.clientX - centerX) / rect.width);
+                y.set((e.clientY - centerY) / rect.height);
+            };
+
+            const handleMouseLeave = () => {
+                x.set(0);
+                y.set(0);
+            };
+
+            const bgX = useTransform(x, [-0.5, 0.5], ["-5%", "5%"]);
+            const bgY = useTransform(y, [-0.5, 0.5], ["-5%", "5%"]);
+            
+            const contentX = useTransform(x, [-0.5, 0.5], [-35, 35]);
+            const contentY = useTransform(y, [-0.5, 0.5], [-35, 35]);
+
+            return (
+                <section 
+                    id="skills" 
+                    ref={containerRef}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    className="py-32 px-8 lg:px-24 relative overflow-hidden bg-transparent"
+                    style={{ perspective: 1200 }}
+                >
+                    <motion.video 
+                        autoPlay loop muted playsInline 
+                        style={{ x: bgX, y: bgY, scale: 1.15 }}
+                        className="absolute inset-0 w-full h-full object-cover z-0 opacity-100 pointer-events-none mix-blend-normal" 
+                        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260424_064411_9e9d7f84-9277-41f4-ab10-59172d89e6be.mp4">
+                    </motion.video>
+                    
+                    <motion.div style={{ x: contentX, y: contentY }} className="max-w-7xl mx-auto relative z-10">
+                        <div className="mb-24 flex flex-col items-center text-center">
+                            <span className="border border-black/20 bg-white/20 rounded-full px-5 py-2 text-xs tracking-widest uppercase text-black mb-8 inline-block shadow-[0_0_15px_rgba(0,0,0,0.1)] backdrop-blur-md font-bold">Polyglot Hub</span>
+                            <h2 className="text-6xl md:text-8xl font-heading italic tracking-[-2px] text-black drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] animate-[pulse_3s_ease-in-out_infinite]" style={{ transformStyle: 'preserve-3d', transform: 'translateZ(50px)' }}>Skills & Dimensions.</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                            {/* Tech Orbs */}
+                            <div className="flex flex-wrap gap-4 justify-center md:justify-end content-center">
+                                {[
+                                    { name: "Python (ML)", lvl: "Advanced" },
+                                    { name: "Arch Linux", lvl: "Native" },
+                                    { name: "BlackArch", lvl: "Exploration" },
+                                    { name: "Photoshop", lvl: "Creative" },
+                                    { name: "Canva", lvl: "Rapid" }
+                                ].map((skill, i) => (
+                                    <div key={i} className={`bg-white/20 border border-black/10 backdrop-blur-md rounded-full px-8 py-5 flex flex-col items-center group cursor-crosshair animate-floating ${i%2===0?'delay-1':'delay-3'} shadow-lg shadow-black/5`}>
+                                        <span className="font-semibold text-lg text-black">{skill.name}</span>
+                                        <div className="h-0 overflow-hidden group-hover:h-auto group-hover:mt-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                            <span className="text-xs font-mono text-purple-900 font-bold">LVL: {skill.lvl}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Language Orbs */}
+                            <div className="flex flex-wrap gap-4 justify-center md:justify-start content-center">
+                                {[
+                                    { name: "English", lvl: "Fluent" },
+                                    { name: "Urdu", lvl: "Poet" },
+                                    { name: "Punjabi", lvl: "Native" },
+                                    { name: "Japanese", lvl: "N5/N4" },
+                                    { name: "Morse Code", lvl: "Transmitting" },
+                                    { name: "Sign Language", lvl: "Learning" }
+                                ].map((skill, i) => (
+                                    <div key={i} className={`bg-white/20 border border-black/10 backdrop-blur-md rounded-full px-8 py-5 flex flex-col items-center group cursor-crosshair animate-floating ${i%2!==0?'delay-2':'delay-1'} shadow-lg shadow-black/5`}>
+                                        <span className="font-semibold text-lg text-black">{skill.name}</span>
+                                        <div className="h-0 overflow-hidden group-hover:h-auto group-hover:mt-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                            <span className="text-xs font-mono text-purple-900 font-bold">DATA: {skill.lvl}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                </section>
+            );
+        }
+
+        // ==========================================
+        // Worlds Imagined Interactive Section
+        // ==========================================
+        function WorldsImaginedSection() {
+            const containerRef = useRef(null);
+            const x = useSpring(0, { stiffness: 100, damping: 30 });
+            const y = useSpring(0, { stiffness: 100, damping: 30 });
+
+            const handleMouseMove = (e) => {
+                if (!containerRef.current) return;
+                const rect = containerRef.current.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                x.set((e.clientX - centerX) / rect.width);
+                y.set((e.clientY - centerY) / rect.height);
+            };
+
+            const handleMouseLeave = () => {
+                x.set(0);
+                y.set(0);
+            };
+
+            const bgX = useTransform(x, [-0.5, 0.5], ["-3%", "3%"]);
+            const bgY = useTransform(y, [-0.5, 0.5], ["-3%", "3%"]);
+            
+            const textX = useTransform(x, [-0.5, 0.5], [-30, 30]);
+            const textY = useTransform(y, [-0.5, 0.5], [-30, 30]);
+
+            return (
+                <section 
+                    ref={containerRef}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    className="relative py-32 overflow-hidden border-y border-white/5 bg-[#030308]"
+                    style={{ perspective: 1200 }}
+                >
+                    <motion.video 
+                        autoPlay loop muted playsInline 
+                        style={{ x: bgX, y: bgY, scale: 1.1 }}
+                        className="absolute inset-0 w-full h-full object-cover z-0 opacity-[0.90] pointer-events-none" 
+                        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4">
+                    </motion.video>
+                    
+                    <motion.div 
+                        style={{ x: textX, y: textY }}
+                        className="text-center mb-12 relative z-10 flex flex-col items-center pointer-events-none"
+                    >
+                         <div className="liquid-glass rounded-full px-4 py-1.5 mb-6 text-xs uppercase tracking-[0.2em] text-[#00ff41] shadow-[0_0_15px_rgba(0,255,65,0.2)]">Interactive Canvas</div>
+                         <h2 className="text-5xl md:text-7xl font-heading italic text-white drop-shadow-[0_0_25px_rgba(255,255,255,0.9)] animate-[pulse_3s_ease-in-out_infinite]" style={{ transformStyle: 'preserve-3d', transform: 'translateZ(50px)' }}>Worlds Imagined</h2>
+                    </motion.div>
+                    <div className="z-10 relative">
+                        <StackedPanels />
+                    </div>
+                </section>
+            );
+        }
+
+        // ==========================================
+        // Main Application
+        // ==========================================
+        function App() {
+            const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+            const audioRef = useRef(null);
+
+            const toggleAudio = () => {
+                if (audioRef.current) {
+                    if (isAudioPlaying) {
+                        audioRef.current.pause();
+                        setIsAudioPlaying(false);
+                    } else {
+                        audioRef.current.play().catch(e => console.log("Audio play failed:", e));
+                        setIsAudioPlaying(true);
+                    }
+                }
+            };
+
+            const startJourney = () => {
+                document.getElementById('about').scrollIntoView({behavior: 'smooth'});
+                if (audioRef.current && !isAudioPlaying) {
+                    audioRef.current.play().then(() => {
+                        setIsAudioPlaying(true);
+                    }).catch(e => console.log("Audio play failed:", e));
+                }
+            };
+
+            // Vanta Net Effect initialization
+            useEffect(() => {
+                let vantaEffect;
+                if (window.VANTA && window.VANTA.NET) {
+                    vantaEffect = window.VANTA.NET({
+                        el: "#vanta-bg",
+                        mouseControls: true,
+                        touchControls: true,
+                        gyroControls: false,
+                        minHeight: 200.00,
+                        minWidth: 200.00,
+                        scale: 1.00,
+                        scaleMobile: 1.00,
+                        color: 0x8b5ad5, // Purple accent from pyramid
+                        backgroundColor: 0x050510,
+                        points: 12.00,
+                        maxDistance: 22.00,
+                        spacing: 16.00
+                    });
+                }
+                return () => {
+                    if (vantaEffect) vantaEffect.destroy();
+                };
+            }, []);
+
+            return (
+                <div className="min-h-screen bg-background text-foreground relative selection:bg-[#00ff41] selection:text-black">
+                    
+                    <audio ref={audioRef} loop src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" preload="auto"></audio>
+                    
+                    {/* Floating Audio Control */}
+                    <button 
+                        onClick={toggleAudio}
+                        className="fixed bottom-8 right-8 z-50 liquid-glass-strong rounded-full w-14 h-14 flex items-center justify-center hover:scale-110 transition-transform text-[#00ff41]"
+                        title="Toggle Nature Ambient"
+                    >
+                        {isAudioPlaying ? (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                        ) : (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                        )}
+                    </button>
+
+                    {/* Fixed Glass Navigation */}
+                    <nav className="fixed top-6 left-0 right-0 z-50 px-8 flex justify-center">
+                        <div className="liquid-glass rounded-full px-6 py-2.5 flex items-center justify-between gap-8 md:gap-12 backdrop-blur-xl">
+                            <span className="font-heading italic text-2xl tracking-tight">Muneeb.</span>
+                            <div className="hidden md:flex gap-8 text-sm font-medium text-white/70 font-inter">
+                                <a href="#about" className="hover:text-white transition-colors">Duality</a>
+                                <a href="#skills" className="hover:text-white transition-colors">Polyglot Hub</a>
+                                <a href="#timeline" className="hover:text-white transition-colors">Data Stream</a>
+                            </div>
+                            <button className="bg-white text-black hover:scale-105 transition-transform rounded-full px-5 py-2 text-sm font-medium ml-4" onClick={startJourney}>
+                                Begin Journey
+                            </button>
+                        </div>
+                    </nav>
+
+                    {/* HERO SECTION */}
+                    <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+                        <div id="vanta-bg"></div>
+                        
+                        <div className="z-10 text-center px-6 max-w-5xl flex flex-col items-center gap-6 pt-20">
+                            <motion.div 
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1, ease: "easeOut" }}
+                                className="liquid-glass rounded-full px-5 py-1.5 flex items-center gap-3 animate-floating"
+                            >
+                                <span className="bg-white text-black px-2 py-0.5 rounded-full text-xs font-bold">NEW</span>
+                                <span className="text-sm font-medium text-white/90">Bridging Shajowal to the Future</span>
+                            </motion.div>
+                            
+                            <motion.h1 
+                                initial={{ opacity: 0, filter: "blur(12px)" }}
+                                animate={{ opacity: 1, filter: "blur(0px)" }}
+                                transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+                                className="text-6xl sm:text-8xl md:text-[8rem] font-heading italic tracking-[-3px] leading-[0.85] text-white"
+                            >
+                                Engineering the <br/>
+                                <span className="text-white/80">Impossible.</span>
+                            </motion.h1>
+
+                            <motion.p 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1, delay: 0.8 }}
+                                className="text-base sm:text-lg text-white/70 font-light max-w-2xl mt-4 font-inter leading-relaxed"
+                            >
+                                Muhammad Muneeb Shahid. 15-year-old dreamer. Building a machine that can imagine. A journey from village roots to global AI mastery.
+                            </motion.p>
+                            
+                            <motion.button 
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.8, delay: 1.2 }}
+                                className="liquid-glass-strong rounded-full px-8 py-3 text-sm font-medium mt-8 hover:scale-105 transition-transform"
+                                onClick={startJourney}
+                            >
+                                Discover the Duality
+                            </motion.button>
+                        </div>
+                    </section>
+
+                    {/* Section divider */}
+                    <div className="section-divider"></div>
+
+                    {/* DUALITY / ABOUT SECTION */}
+                    <SectionReveal direction="up" delay={0.05}>
+                    <section id="about" className="relative min-h-screen py-32 px-8 lg:px-24 border-t border-white/5 flex flex-col justify-center">
+                        {/* Matrix Rain Background Component */}
+                        <div className="matrix-container">
+                            <div className="matrix-pattern">
+                                {Array.from({ length: 45 }).map((_, i) => (
+                                    <div key={i} className="matrix-column" style={{ 
+                                        animationDelay: `-${Math.random() * 5}s`,
+                                        animationDuration: `${2.5 + Math.random() * 3}s`
+                                    }}></div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center z-10 max-w-7xl mx-auto w-full">
+                            
+                            {/* Portrait / Digital Avatar */}
+                            <motion.div 
+                                initial={{ opacity: 0, x: -50 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8 }}
+                                className="flex justify-center relative"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/30 to-[#00ff41]/15 rounded-[3rem] blur-3xl animate-[pulse_4s_ease-in-out_infinite]"></div>
+                                <div className="flex flex-col items-center relative animate-floating">
+                                    {/* Outer glow ring */}
+                                    <div className="relative mb-6">
+                                        {/* Rotating gradient ring */}
+                                        <div className="absolute -inset-3 rounded-[3rem] bg-gradient-to-tr from-[#00ff41]/40 via-purple-500/40 to-[#00ff41]/20 animate-[spin_8s_linear_infinite] blur-sm opacity-80"></div>
+                                        {/* Static border ring */}
+                                        <div className="absolute -inset-[2px] rounded-[2.8rem] border border-white/10"></div>
+                                        
+                                        {/* Main card — cropped to face, no black ceiling */}
+                                        <div className="w-72 h-[28rem] rounded-[2.5rem] p-[3px] relative overflow-hidden" style={{background: 'linear-gradient(135deg, rgba(0,255,65,0.3) 0%, rgba(147,51,234,0.4) 50%, rgba(0,255,65,0.1) 100%)'}}>
+                                            <div className="w-full h-full rounded-[2.3rem] bg-black overflow-hidden relative group">
+                                                {/* Muneeb's Portrait — black space cropped */}
+                                                <img
+                                                    src="muneeb-profile.jpg"
+                                                    alt="Muneeb Shahid"
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                    style={{ objectPosition: '50% 20%' }}
+                                                />
+                                                {/* Scan line effect */}
+                                                <div className="absolute inset-0 opacity-[0.04]" style={{backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.5) 2px, rgba(0,255,65,0.5) 3px)'}}></div>
+                                                {/* Corner accents */}
+                                                <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-[#00ff41]/70 rounded-tl-md"></div>
+                                                <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00ff41]/70 rounded-tr-md"></div>
+                                                <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-purple-400/70 rounded-bl-md"></div>
+                                                <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-purple-400/70 rounded-br-md"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Text below the picture with neon/pulse effect */}
+                                    <div className="text-center">
+                                        <h3 className="font-heading italic text-5xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-[pulse_3s_ease-in-out_infinite]">Muneeb</h3>
+                                        <p className="text-xs tracking-[0.3em] uppercase text-[#00ff41] mt-3 drop-shadow-[0_0_10px_rgba(0,255,65,0.8)]">Human / Architect</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* AI Core & Decryption Narrative */}
+                            <motion.div 
+                                initial={{ opacity: 0, x: 50 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: 0.2 }}
+                                className="flex flex-col gap-16 relative"
+                            >
+                                {/* Pyramid Loader representing the AI Core */}
+                                <div className="flex justify-center lg:justify-start">
+                                    <div className="pyramid-loader scale-90 animate-floating delay-1">
+                                        <div className="wrapper">
+                                            <span className="side side1"></span>
+                                            <span className="side side2"></span>
+                                            <span className="side side3"></span>
+                                            <span className="side side4"></span>
+                                            <span className="shadow"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="liquid-glass p-8 md:p-12 rounded-[2rem] animate-floating delay-2">
+                                    <h2 className="text-xs tracking-[0.25em] text-[#00ff41]/80 mb-6 uppercase font-bold">
+                                        System Narrative // Decrypting...
+                                    </h2>
+                                    <p className="text-2xl md:text-3xl font-heading italic leading-snug text-white/90">
+                                        <DecryptText text="After my grandmother's passing, a stutter became part of my life, leading me to cherish the company of my own thoughts. As a child, Doreamon taught me the impossible is just a challenge waiting to be engineered. Now, my dream is to build a machine that can imagine. I am a poet of Urdu, a student of Arch Linux, and a builder of bridges from my village to Tokyo and Harvard." />
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </section>
+                    </SectionReveal>
+
+                    {/* Section divider */}
+                    <div className="section-divider"></div>
+
+                    {/* POLYGLOT HUB (Skills) */}
+                    <SectionReveal direction="left" delay={0.05}>
+                    <PolyglotHubSection />
+                    </SectionReveal>
+
+                    {/* Section divider */}
+                    <div className="section-divider"></div>
+
+                    {/* WORLDS IMAGINED (Interactive Stacked Panels) */}
+                    <SectionReveal direction="scale" delay={0.05}>
+                    <WorldsImaginedSection />
+                    </SectionReveal>
+
+                    {/* Section divider */}
+                    <div className="section-divider"></div>
+
+                    {/* DATA STREAM (Timeline) */}
+                    <SectionReveal direction="right" delay={0.05}>
+                    <section id="timeline" className="relative py-32 px-8 lg:px-24 border-t border-white/5">
+                        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
+                            
+                            {/* Data Stream / CV */}
+                            <div className="relative">
+                                <h3 className="text-5xl font-heading italic mb-16 text-white tracking-tight">Data Stream</h3>
+                                <div className="absolute left-4 top-24 bottom-0 w-px bg-white/10"></div>
+                                
+                                <div className="mb-14 relative pl-12 group">
+                                    <div className="absolute top-1.5 left-2.5 w-3 h-3 rounded-full bg-white group-hover:scale-150 transition-transform shadow-[0_0_10px_white]"></div>
+                                    <h4 className="text-2xl font-bold mb-2">Matric / 10th Grade</h4>
+                                    <p className="text-white/60 text-base font-light leading-relaxed">Completed with extreme hard work & ambition. A former consistent topper in middle school, scoring above 90%.</p>
+                                </div>
+                                
+                                <div className="mb-14 relative pl-12 group">
+                                    <div className="absolute top-1.5 left-2.5 w-3 h-3 rounded-full bg-purple-500 group-hover:scale-150 transition-transform shadow-[0_0_15px_purple]"></div>
+                                    <h4 className="text-2xl font-bold mb-2">Self-Taught Path</h4>
+                                    <p className="text-white/60 text-base font-light leading-relaxed">Diving deep into Machine Learning with Python, mastering Linux fundamentals (Arch/BlackArch), and polishing design skills in Photoshop & Canva.</p>
+                                </div>
+                                
+                                <div className="relative pl-12 group">
+                                    <div className="absolute top-1.5 left-2.5 w-3 h-3 rounded-full bg-[#00ff41] group-hover:scale-150 transition-transform shadow-[0_0_20px_#00ff41]"></div>
+                                    <h4 className="text-2xl font-bold mb-2 text-[#00ff41]">The Goal</h4>
+                                    <p className="text-white/60 text-base font-light leading-relaxed">Tokyo University & Harvard University. The ultimate mission: to be a good man and engineer an AI machine that can truly imagine.</p>
+                                </div>
+                            </div>
+
+                            {/* Hobbies / HOBBY */}
+                            <div>
+                                <h3 className="text-5xl font-heading italic mb-16 text-white tracking-tight text-right">HOBBY</h3>
+                                <div className="grid grid-cols-2 gap-6">
+                                    {['Poetry (Urdu)', 'Singing', 'Drawing', 'Deep Thinking', 'Street Football', 'Street Badminton'].map((hobby, i) => (
+                                        <div key={i} className="liquid-glass rounded-3xl p-8 text-center animate-floating flex items-center justify-center" style={{animationDelay: `${i * 0.4}s`}}>
+                                            <span className="font-heading italic text-2xl text-white/90">{hobby}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+                    </SectionReveal>
+
+                    {/* Section divider */}
+                    <div className="section-divider"></div>
+
+                    {/* DIRECT TRANSMISSION (Contact Form) */}
+                    <SectionReveal direction="up" delay={0.05}>
+                    <section id="contact" className="py-32 px-8 lg:px-24 relative overflow-hidden bg-transparent border-t border-white/5">
+                        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0 opacity-[0.90] pointer-events-none" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260429_115139_0fc6bd3d-3631-4d26-ab9b-28293887dcc9.mp4"></video>
+                        
+                        <div className="max-w-4xl mx-auto relative z-10">
+                            <div className="text-center mb-16">
+                                <span className="liquid-glass rounded-full px-5 py-2 text-xs tracking-widest uppercase text-[#00ff41] mb-6 inline-block">Direct Transmission</span>
+                                <h2 className="text-5xl md:text-7xl font-heading italic text-white">Send a Signal.</h2>
+                            </div>
+                            
+                            <form action="mailto:muhammad.muneeb.nif@gmail.com" method="post" encType="text/plain" className="liquid-glass-strong p-8 md:p-12 rounded-[2.5rem] flex flex-col gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="flex flex-col gap-2">
+                                        <label className="text-xs uppercase tracking-widest text-white/50 pl-2">Your Designation</label>
+                                        <input type="text" name="Name" required placeholder="John Doe" className="bg-black/50 border border-white/10 rounded-full px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-[#00ff41]/50 transition-colors" />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label className="text-xs uppercase tracking-widest text-white/50 pl-2">Return Frequency (Email)</label>
+                                        <input type="email" name="Email" required placeholder="john@example.com" className="bg-black/50 border border-white/10 rounded-full px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-[#00ff41]/50 transition-colors" />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-xs uppercase tracking-widest text-white/50 pl-2">Data Payload</label>
+                                    <textarea name="Message" required rows="5" placeholder="Enter your message..." className="bg-black/50 border border-white/10 rounded-[1.5rem] px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-[#00ff41]/50 transition-colors resize-none"></textarea>
+                                </div>
+                                <button type="submit" className="bg-[#00ff41]/90 text-black rounded-full px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-[#00ff41] hover:scale-[1.02] transition-transform mt-4 self-center md:self-end">
+                                    Transmit Data
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                    </SectionReveal>
+
+                    {/* Section divider */}
+                    <div className="section-divider"></div>
+
+                    {/* CTA / FOOTER */}
+                    <SectionReveal direction="fade" delay={0.1}>
+                    <footer className="relative py-24 border-t border-white/5 flex flex-col items-center justify-center overflow-hidden">
+                        {/* Japanese Background Letters */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 select-none opacity-[0.03]">
+                            <div className="text-[15rem] md:text-[25rem] font-bold text-white whitespace-nowrap tracking-widest flex gap-32 font-sans">
+                                <span>連絡</span>
+                                <span>未来</span>
+                            </div>
+                        </div>
+
+                        <div className="z-10 text-center max-w-3xl px-6 relative">
+                            <h2 className="text-4xl md:text-6xl font-heading italic mb-6">"I will not just do my best; <br/> <span className="text-white/50">I will do THE best."</span></h2>
+                            <p className="text-white/40 font-mono text-sm uppercase tracking-widest mb-12">
+                                Muhammad Muneeb Shahid — Sentient Architecture
+                            </p>
+                            <ContactCard />
+                        </div>
+                        <div className="w-full text-center mt-24 text-white/20 text-xs font-mono relative z-10">
+                            &copy; 2026 Muneeb Portfolio. Built for the Future.
+                        </div>
+                    </footer>
+                    </SectionReveal>
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<App />);
+    </script>
+</body>
+</html>
